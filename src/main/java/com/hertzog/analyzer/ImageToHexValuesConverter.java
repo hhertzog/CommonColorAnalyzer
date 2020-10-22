@@ -3,14 +3,17 @@ package com.hertzog.analyzer;
 import org.springframework.lang.NonNull;
 
 import java.awt.image.BufferedImage;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
 public class ImageToHexValuesConverter {
 
-    public static Map<String, Integer> getHexPixelCountMap(@NonNull BufferedImage image, int granularity) {
-        if (granularity < 1) {
-            throw new IllegalArgumentException("Granularity must be greater than 0");
+    public static Map<String, Integer> getHexPixelCountMap(@NonNull BufferedImage image,
+                                                           int numColorsToFind,
+                                                           int granularity) {
+        if (granularity < 1 || numColorsToFind < 1) {
+            throw new IllegalArgumentException("Granularity and number of colors to find must both be greater than 0");
         }
 
         Map<String, Integer> hexCountsMap = new HashMap<>();
@@ -20,7 +23,18 @@ public class ImageToHexValuesConverter {
                 hexCountsMap.put(roundedHex, hexCountsMap.getOrDefault(roundedHex, 0) + 1);
             }
         }
-        return hexCountsMap;
+        return getKMostCommonColors(hexCountsMap, numColorsToFind);
+    }
+
+    private static Map<String, Integer> getKMostCommonColors(Map<String, Integer> allColors, int k) {
+        Map<String, Integer> trimmedMap = new HashMap<>();
+
+        allColors.entrySet()
+                .stream()
+                .sorted(Comparator.comparing(Map.Entry::getValue))
+                .limit(k)
+                .forEach(entry -> trimmedMap.put(entry.getKey(), entry.getValue()));
+        return trimmedMap;
     }
 
     private static String getRoundedHexFromRGB(int rgb, int granularity) {
