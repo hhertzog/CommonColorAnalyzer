@@ -9,6 +9,12 @@ import java.util.Map;
 
 public class ImageToHexValuesConverter {
 
+    public static Map<String, Double> getHexPercentagesMap(@NonNull BufferedImage image,
+                                                           int numColorsToFind,
+                                                           int granularity) {
+        return buildPercentageMap(image, numColorsToFind, granularity);
+    }
+
     public static Map<String, Integer> getHexPixelCountMap(@NonNull BufferedImage image,
                                                            int numColorsToFind,
                                                            int granularity) {
@@ -26,15 +32,34 @@ public class ImageToHexValuesConverter {
         return getKMostCommonColors(hexCountsMap, numColorsToFind);
     }
 
+    private static Map<String, Double> buildPercentageMap(BufferedImage image, int numColors, int granularity) {
+        Map<String, Double> hexPercentageMap = new HashMap<>();
+        Map<String, Integer> hexPixelCountsMap = getHexPixelCountMap(image, numColors, granularity);
+        int totalNumberOfPixels = getTotalNumberOfPixelsInMap(hexPixelCountsMap);
+
+        for (Map.Entry<String, Integer> entry : hexPixelCountsMap.entrySet()) {
+            hexPercentageMap.put(entry.getKey(), (1.0 * entry.getValue()) / (totalNumberOfPixels));
+        }
+        return hexPercentageMap;
+    }
+
     private static Map<String, Integer> getKMostCommonColors(Map<String, Integer> allColors, int k) {
         Map<String, Integer> trimmedMap = new HashMap<>();
 
         allColors.entrySet()
                 .stream()
-                .sorted(Comparator.comparing(Map.Entry::getValue))
+                .sorted(Comparator.comparing(Map.Entry<String, Integer>::getValue).reversed())
                 .limit(k)
                 .forEach(entry -> trimmedMap.put(entry.getKey(), entry.getValue()));
         return trimmedMap;
+    }
+
+    private static int getTotalNumberOfPixelsInMap(Map<String, Integer> hexPixelCountsMap) {
+        int totalPixels = 0;
+        for (int i : hexPixelCountsMap.values()) {
+            totalPixels += i;
+        }
+        return totalPixels;
     }
 
     private static String getRoundedHexFromRGB(int rgb, int granularity) {
