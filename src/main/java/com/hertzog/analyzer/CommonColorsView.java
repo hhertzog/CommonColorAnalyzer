@@ -10,16 +10,22 @@ import java.util.List;
 import java.util.Map;
 
 public class CommonColorsView {
-    public static void drawCommonImageColorsAsPieChart(@NonNull BufferedImage image,
+    private ImageToHexValuesConverter converter;
+
+    public CommonColorsView(ImageToHexValuesConverter converter) {
+        this.converter = converter;
+    }
+
+    public void drawCommonImageColorsAsPieChart(@NonNull BufferedImage image,
                                                        int numColorsToInclude,
                                                        int granularity) {
         Map<String, Double> hexPercentagesMap =
-                ImageToHexValuesConverter.getHexPercentagesMap(image, numColorsToInclude, granularity);
+                converter.getHexPercentagesMap(image, numColorsToInclude, granularity);
 
         drawCommonImageColorsFromPercentageMap(hexPercentagesMap);
     }
 
-    private static void drawCommonImageColorsFromPercentageMap(Map<String, Double> percentageMap) {
+    private void drawCommonImageColorsFromPercentageMap(Map<String, Double> percentageMap) {
         List<String> hexVals = new ArrayList<>();
         List<Double> percentages = new ArrayList<>();
         for (Map.Entry<String, Double> e : percentageMap.entrySet()) {
@@ -30,7 +36,7 @@ public class CommonColorsView {
         drawPieChartInFrame(new PieChart(hexVals, percentages));
     }
 
-    private static void drawPieChartInFrame(PieChart pieChart) {
+    private void drawPieChartInFrame(PieChart pieChart) {
         JFrame frame = new JFrame();
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.add(pieChart);

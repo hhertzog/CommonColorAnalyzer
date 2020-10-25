@@ -8,14 +8,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ImageToHexValuesConverter {
-
-    public static Map<String, Double> getHexPercentagesMap(@NonNull BufferedImage image,
+    public Map<String, Double> getHexPercentagesMap(@NonNull BufferedImage image,
                                                            int numColorsToFind,
                                                            int granularity) {
         return buildPercentageMap(image, numColorsToFind, granularity);
     }
 
-    public static Map<String, Integer> getHexPixelCountMap(@NonNull BufferedImage image,
+    public Map<String, Integer> getHexPixelCountMap(@NonNull BufferedImage image,
                                                            int numColorsToFind,
                                                            int granularity) {
         if (granularity < 1 || numColorsToFind < 1) {
@@ -32,7 +31,7 @@ public class ImageToHexValuesConverter {
         return getKMostCommonColors(hexCountsMap, numColorsToFind);
     }
 
-    private static Map<String, Double> buildPercentageMap(BufferedImage image, int numColors, int granularity) {
+    private Map<String, Double> buildPercentageMap(BufferedImage image, int numColors, int granularity) {
         Map<String, Double> hexPercentageMap = new HashMap<>();
         Map<String, Integer> hexPixelCountsMap = getHexPixelCountMap(image, numColors, granularity);
         int totalNumberOfPixels = getTotalNumberOfPixelsInMap(hexPixelCountsMap);
@@ -43,7 +42,7 @@ public class ImageToHexValuesConverter {
         return hexPercentageMap;
     }
 
-    private static Map<String, Integer> getKMostCommonColors(Map<String, Integer> allColors, int k) {
+    private Map<String, Integer> getKMostCommonColors(Map<String, Integer> allColors, int k) {
         Map<String, Integer> trimmedMap = new HashMap<>();
 
         allColors.entrySet()
@@ -54,7 +53,7 @@ public class ImageToHexValuesConverter {
         return trimmedMap;
     }
 
-    private static int getTotalNumberOfPixelsInMap(Map<String, Integer> hexPixelCountsMap) {
+    private int getTotalNumberOfPixelsInMap(Map<String, Integer> hexPixelCountsMap) {
         int totalPixels = 0;
         for (int i : hexPixelCountsMap.values()) {
             totalPixels += i;
@@ -62,12 +61,12 @@ public class ImageToHexValuesConverter {
         return totalPixels;
     }
 
-    private static String getRoundedHexFromRGB(int rgb, int granularity) {
+    private String getRoundedHexFromRGB(int rgb, int granularity) {
         int[] roundedRGB = roundRGBToGranularity(rgb, granularity);
         return String.format("#%02x%02x%02x", roundedRGB[0], roundedRGB[1], roundedRGB[2]);
     }
 
-    private static int[] roundRGBToGranularity(int rgb, int granularity) {
+    private int[] roundRGBToGranularity(int rgb, int granularity) {
         int red = (rgb >> 16) & 0xff;
         int green = (rgb >> 8) & 0xff;
         int blue = (rgb) & 0xff;
@@ -77,7 +76,7 @@ public class ImageToHexValuesConverter {
                 roundNumberToGranularity(blue, granularity)};
     }
 
-    private static int roundNumberToGranularity(int value, int granularity) {
+    private int roundNumberToGranularity(int value, int granularity) {
         return (Math.round(value/granularity) * granularity);
     }
 }

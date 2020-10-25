@@ -24,14 +24,15 @@ public class ImageToHexValuesConverterTests {
     @Mock
     private BufferedImage mockImage;
 
+    private ImageToHexValuesConverter sut = new ImageToHexValuesConverter();
+
     @Test
     public void whenGetHexPixelCountMap_givenProperImage_thenReturnsHexCountsMap() {
         when(mockImage.getHeight()).thenReturn(IMAGE_HEIGHT);
         when(mockImage.getWidth()).thenReturn(IMAGE_WIDTH);
         when(mockImage.getRGB(anyInt(), anyInt())).thenReturn(IMAGE_RGB);
 
-        Map<String, Integer> result =
-                ImageToHexValuesConverter.getHexPixelCountMap(mockImage, NUM_COLORS_TO_FIND, GRANULARITY);
+        Map<String, Integer> result = sut.getHexPixelCountMap(mockImage, NUM_COLORS_TO_FIND, GRANULARITY);
 
         assertNotNull(result);
         assertTrue(!result.isEmpty());
@@ -45,8 +46,7 @@ public class ImageToHexValuesConverterTests {
         when(mockImage.getWidth()).thenReturn(IMAGE_WIDTH);
         when(mockImage.getRGB(anyInt(), anyInt())).thenReturn(IMAGE_RGB);
 
-        Map<String, Integer> result =
-                ImageToHexValuesConverter.getHexPixelCountMap(mockImage, Integer.MAX_VALUE, GRANULARITY);
+        Map<String, Integer> result = sut.getHexPixelCountMap(mockImage, Integer.MAX_VALUE, GRANULARITY);
 
         assertNotNull(result);
         assertTrue(!result.isEmpty());
@@ -57,14 +57,14 @@ public class ImageToHexValuesConverterTests {
     @Test
     public void whenGetHexPixelCountMap_givenNegativeGranularity_thenThrowsIllegalArgumentException() {
         Exception e = assertThrows(IllegalArgumentException.class,
-                () -> ImageToHexValuesConverter.getHexPixelCountMap(mockImage, NUM_COLORS_TO_FIND, -GRANULARITY));
+                () -> sut.getHexPixelCountMap(mockImage, NUM_COLORS_TO_FIND, -GRANULARITY));
         assertTrue(e.getMessage().equals(EXCEPTION_MESSAGE));
     }
 
     @Test
     public void whenGetHexPixelCountMap_givenNegativeNumColorsToFind_thenThrowsIllegalArgumentException() {
         Exception e = assertThrows(IllegalArgumentException.class,
-                () -> ImageToHexValuesConverter.getHexPixelCountMap(mockImage, -NUM_COLORS_TO_FIND, GRANULARITY));
+                () -> sut.getHexPixelCountMap(mockImage, -NUM_COLORS_TO_FIND, GRANULARITY));
         assertTrue(e.getMessage().equals(EXCEPTION_MESSAGE));
     }
 }
