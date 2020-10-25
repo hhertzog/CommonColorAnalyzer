@@ -14,7 +14,7 @@ public class PieChart extends JPanel {
     }
 
     @Override
-    protected void paintComponent(Graphics g) {
+    public void paintComponent(Graphics g) {
         int width = getWidth();
         int height = getHeight();
         Graphics2D g2d = (Graphics2D) g;
