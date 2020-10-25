@@ -5,6 +5,7 @@ import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -66,5 +67,68 @@ public class ImageToHexValuesConverterTests {
         Exception e = assertThrows(IllegalArgumentException.class,
                 () -> sut.getHexPixelCountMap(mockImage, -NUM_COLORS_TO_FIND, GRANULARITY));
         assertTrue(e.getMessage().equals(EXCEPTION_MESSAGE));
+    }
+
+    @Test
+    public void whenGetHexPercentageMap_givenProperImage_thenReturnsHexPercentageMap() {
+        when(mockImage.getHeight()).thenReturn(IMAGE_HEIGHT);
+        when(mockImage.getWidth()).thenReturn(IMAGE_WIDTH);
+        when(mockImage.getRGB(anyInt(), anyInt())).thenReturn(IMAGE_RGB);
+
+        Map<String, Double> result = sut.getHexPercentagesMap(mockImage, NUM_COLORS_TO_FIND, GRANULARITY);
+
+        assertNotNull(result);
+        assertTrue(!result.isEmpty());
+        assertTrue(result.get(IMAGE_HEX) == 1.0);
+        assertTrue(result.keySet().size() == NUM_COLORS_TO_FIND);
+    }
+
+    @Test
+    public void whenGetHexPercentageMap_givenMoreColorsToFindThanPresentInImage_thenReturnsHexCountsMap() {
+        when(mockImage.getHeight()).thenReturn(IMAGE_HEIGHT);
+        when(mockImage.getWidth()).thenReturn(IMAGE_WIDTH);
+        when(mockImage.getRGB(anyInt(), anyInt())).thenReturn(IMAGE_RGB);
+
+        Map<String, Double> result = sut.getHexPercentagesMap(mockImage, Integer.MAX_VALUE, GRANULARITY);
+
+        assertNotNull(result);
+        assertTrue(!result.isEmpty());
+        assertTrue(result.get(IMAGE_HEX) == 1.0);
+        assertTrue(result.keySet().size() == NUM_COLORS_TO_FIND);
+    }
+
+    @Test
+    public void whenGetHexPercentageMap_givenNegativeGranularity_thenThrowsIllegalArgumentException() {
+        Exception e = assertThrows(IllegalArgumentException.class,
+                () -> sut.getHexPercentagesMap(mockImage, NUM_COLORS_TO_FIND, -GRANULARITY));
+        assertTrue(e.getMessage().equals(EXCEPTION_MESSAGE));
+    }
+
+    @Test
+    public void whenGetHexPercentageMap_givenNegativeNumColorsToFind_thenThrowsIllegalArgumentException() {
+        Exception e = assertThrows(IllegalArgumentException.class,
+                () -> sut.getHexPercentagesMap(mockImage, -NUM_COLORS_TO_FIND, GRANULARITY));
+        assertTrue(e.getMessage().equals(EXCEPTION_MESSAGE));
+    }
+
+    @Test
+    public void whenGetPercentageMapFromPixelCounts_givenGoodPixelCountsMap_thenReturnsPercentageMap() {
+        Map<String, Integer> countsMap = new HashMap<>();
+        countsMap.put(IMAGE_HEX, IMAGE_HEIGHT * IMAGE_WIDTH);
+
+        Map<String, Double> result = sut.getPercentageMapFromPixelCounts(countsMap);
+
+        assertTrue(!result.isEmpty());
+        assertTrue(result.keySet().size() == 1);
+        assertTrue(result.get(IMAGE_HEX) == 1.0);
+    }
+
+    @Test
+    public void whenGetPercentageMapFromPixelCounts_givenEmptyPixelCountsMap_thenReturnsEmptyPercentageMap() {
+        Map<String, Integer> countsMap = new HashMap<>();
+
+        Map<String, Double> result = sut.getPercentageMapFromPixelCounts(countsMap);
+
+        assertTrue(result.isEmpty());
     }
 }

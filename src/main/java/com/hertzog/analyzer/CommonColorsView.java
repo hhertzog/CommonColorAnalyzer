@@ -25,7 +25,7 @@ public class CommonColorsView {
         drawCommonImageColorsFromPercentageMap(hexPercentagesMap);
     }
 
-    private void drawCommonImageColorsFromPercentageMap(Map<String, Double> percentageMap) {
+    public void drawCommonImageColorsFromPercentageMap(Map<String, Double> percentageMap) {
         List<String> hexVals = new ArrayList<>();
         List<Double> percentages = new ArrayList<>();
         for (Map.Entry<String, Double> e : percentageMap.entrySet()) {

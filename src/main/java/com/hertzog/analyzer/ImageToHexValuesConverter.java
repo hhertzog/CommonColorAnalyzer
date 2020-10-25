@@ -11,7 +11,7 @@ public class ImageToHexValuesConverter {
     public Map<String, Double> getHexPercentagesMap(@NonNull BufferedImage image,
                                                            int numColorsToFind,
                                                            int granularity) {
-        return buildPercentageMap(image, numColorsToFind, granularity);
+        return getPercentageMapFromPixelCounts(getHexPixelCountMap(image, numColorsToFind, granularity));
     }
 
     public Map<String, Integer> getHexPixelCountMap(@NonNull BufferedImage image,
@@ -31,14 +31,14 @@ public class ImageToHexValuesConverter {
         return getKMostCommonColors(hexCountsMap, numColorsToFind);
     }
 
-    private Map<String, Double> buildPercentageMap(BufferedImage image, int numColors, int granularity) {
+    public Map<String, Double> getPercentageMapFromPixelCounts(@NonNull Map<String, Integer> hexPixelCountsMap) {
         Map<String, Double> hexPercentageMap = new HashMap<>();
-        Map<String, Integer> hexPixelCountsMap = getHexPixelCountMap(image, numColors, granularity);
         int totalNumberOfPixels = getTotalNumberOfPixelsInMap(hexPixelCountsMap);
 
         for (Map.Entry<String, Integer> entry : hexPixelCountsMap.entrySet()) {
             hexPercentageMap.put(entry.getKey(), (1.0 * entry.getValue()) / (totalNumberOfPixels));
         }
+
         return hexPercentageMap;
     }
 
