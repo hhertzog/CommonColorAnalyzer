@@ -12,7 +12,7 @@ import java.util.Map;
 public class CommonColorsView {
     private ImageToHexValuesConverter converter;
 
-    public CommonColorsView(ImageToHexValuesConverter converter) {
+    public CommonColorsView(@NonNull ImageToHexValuesConverter converter) {
         this.converter = converter;
     }
 
@@ -25,7 +25,11 @@ public class CommonColorsView {
         drawCommonImageColorsFromPercentageMap(hexPercentagesMap);
     }
 
-    public void drawCommonImageColorsFromPercentageMap(Map<String, Double> percentageMap) {
+    public void drawCommonImageColorsFromPercentageMap(@NonNull Map<String, Double> percentageMap) {
+        if (percentageMap.isEmpty()) {
+            throw new IllegalArgumentException("Percentage map must have at least one entry!");
+        }
+
         List<String> hexVals = new ArrayList<>();
         List<Double> percentages = new ArrayList<>();
         for (Map.Entry<String, Double> e : percentageMap.entrySet()) {
