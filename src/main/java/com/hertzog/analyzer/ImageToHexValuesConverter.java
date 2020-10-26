@@ -1,5 +1,6 @@
 package com.hertzog.analyzer;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 
 import java.awt.image.BufferedImage;
@@ -8,6 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ImageToHexValuesConverter {
+
     public Map<String, Double> getHexPercentagesMap(@NonNull BufferedImage image,
                                                            int numColorsToFind,
                                                            int granularity) {

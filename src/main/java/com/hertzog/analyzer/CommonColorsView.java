@@ -1,5 +1,6 @@
 package com.hertzog.analyzer;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 
 import javax.swing.*;
@@ -12,6 +13,7 @@ import java.util.Map;
 public class CommonColorsView {
     private ImageToHexValuesConverter converter;
 
+    @Autowired
     public CommonColorsView(@NonNull ImageToHexValuesConverter converter) {
         this.converter = converter;
     }

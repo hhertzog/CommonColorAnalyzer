@@ -1,5 +1,6 @@
 package com.hertzog.analyzer;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 
 import javax.imageio.ImageIO;
@@ -11,9 +12,10 @@ import java.util.*;
 public class CommonColorsManager {
     private ImageToHexValuesConverter converter;
     private CommonColorsView view;
-    public int numColorsToFind;
-    public int granularity;
+    private int numColorsToFind;
+    private int granularity;
 
+    @Autowired
     public CommonColorsManager(@NonNull ImageToHexValuesConverter converter,
                                @NonNull CommonColorsView view,
                                int numColorsToFind,
