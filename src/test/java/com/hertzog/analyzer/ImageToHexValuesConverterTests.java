@@ -19,7 +19,10 @@ public class ImageToHexValuesConverterTests {
     private int IMAGE_HEIGHT = 5;
     private int IMAGE_WIDTH = 4;
     private int IMAGE_RGB = 0;
-    private String IMAGE_HEX = "#000000";
+    private String IMAGE_HEX  = "#000000";
+    private String IMAGE_HEX2 = "#111111";
+    private String IMAGE_HEX3 = "#222222";
+    private String IMAGE_HEX4 = "#333333";
     private String EXCEPTION_MESSAGE = "Granularity and number of colors to find must both be greater than 0";
 
     @Mock
@@ -116,7 +119,7 @@ public class ImageToHexValuesConverterTests {
         Map<String, Integer> countsMap = new HashMap<>();
         countsMap.put(IMAGE_HEX, IMAGE_HEIGHT * IMAGE_WIDTH);
 
-        Map<String, Double> result = sut.getPercentageMapFromPixelCounts(countsMap);
+        Map<String, Double> result = sut.getPercentageMapFromPixelCounts(countsMap, NUM_COLORS_TO_FIND);
 
         assertTrue(!result.isEmpty());
         assertTrue(result.keySet().size() == 1);
@@ -124,10 +127,26 @@ public class ImageToHexValuesConverterTests {
     }
 
     @Test
+    public void whenGetPercentageMapFromPixelCounts_givenMapWithMultipleEntries_thenReturnedMapIsTrimmed() {
+        Map<String, Integer> countsMap = new HashMap<>();
+        countsMap.put(IMAGE_HEX, 1);
+        countsMap.put(IMAGE_HEX2, 2);
+        countsMap.put(IMAGE_HEX3, 3);
+        countsMap.put(IMAGE_HEX4, 4);
+
+
+        Map<String, Double> result = sut.getPercentageMapFromPixelCounts(countsMap, 2);
+
+        assertTrue(!result.isEmpty());
+        assertTrue(result.keySet().size() == 2);
+        assertTrue(result.containsKey(IMAGE_HEX3) && result.containsKey(IMAGE_HEX4));
+    }
+
+    @Test
     public void whenGetPercentageMapFromPixelCounts_givenEmptyPixelCountsMap_thenReturnsEmptyPercentageMap() {
         Map<String, Integer> countsMap = new HashMap<>();
 
-        Map<String, Double> result = sut.getPercentageMapFromPixelCounts(countsMap);
+        Map<String, Double> result = sut.getPercentageMapFromPixelCounts(countsMap, NUM_COLORS_TO_FIND);
 
         assertTrue(result.isEmpty());
     }

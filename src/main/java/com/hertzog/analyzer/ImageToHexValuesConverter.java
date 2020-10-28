@@ -1,6 +1,5 @@
 package com.hertzog.analyzer;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 
 import java.awt.image.BufferedImage;
@@ -13,7 +12,8 @@ public class ImageToHexValuesConverter {
     public Map<String, Double> getHexPercentagesMap(@NonNull BufferedImage image,
                                                            int numColorsToFind,
                                                            int granularity) {
-        return getPercentageMapFromPixelCounts(getHexPixelCountMap(image, numColorsToFind, granularity));
+        return getPercentageMapFromPixelCounts(
+                getHexPixelCountMap(image, numColorsToFind, granularity), numColorsToFind);
     }
 
     public Map<String, Integer> getHexPixelCountMap(@NonNull BufferedImage image,
@@ -33,14 +33,16 @@ public class ImageToHexValuesConverter {
         return getKMostCommonColors(hexCountsMap, numColorsToFind);
     }
 
-    public Map<String, Double> getPercentageMapFromPixelCounts(@NonNull Map<String, Integer> hexPixelCountsMap) {
+    public Map<String, Double> getPercentageMapFromPixelCounts(@NonNull Map<String, Integer> hexPixelCountsMap,
+                                                               int numColorsToFind) {
         Map<String, Double> hexPercentageMap = new HashMap<>();
-        int totalNumberOfPixels = getTotalNumberOfPixelsInMap(hexPixelCountsMap);
+        Map<String, Integer> trimmedMap = hexPixelCountsMap.size() > numColorsToFind ?
+                getKMostCommonColors(hexPixelCountsMap, numColorsToFind) : hexPixelCountsMap;
+        int totalNumberOfPixels = getTotalNumberOfPixelsInMap(trimmedMap);
 
-        for (Map.Entry<String, Integer> entry : hexPixelCountsMap.entrySet()) {
+        for (Map.Entry<String, Integer> entry : trimmedMap.entrySet()) {
             hexPercentageMap.put(entry.getKey(), (1.0 * entry.getValue()) / (totalNumberOfPixels));
         }
-
         return hexPercentageMap;
     }
 

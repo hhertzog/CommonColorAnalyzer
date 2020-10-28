@@ -37,7 +37,7 @@ public class CommonColorsManagerTests {
         sut.drawColorChartForAllImagesInDirectory(DIRECTORY_PATH);
 
         verify(converter, times(2)).getHexPixelCountMap(any(), anyInt(), anyInt());
-        verify(converter).getPercentageMapFromPixelCounts(any());
+        verify(converter).getPercentageMapFromPixelCounts(any(), anyInt());
         verify(view).drawCommonImageColorsFromPercentageMap(anyMap());
     }
 
@@ -48,7 +48,7 @@ public class CommonColorsManagerTests {
 
         sut.drawColorChartForAllImagesInDirectory(NO_IMAGES_DIRECTORY);
 
-        verify(converter).getPercentageMapFromPixelCounts(any());
+        verify(converter).getPercentageMapFromPixelCounts(any(), anyInt());
         verify(view).drawCommonImageColorsFromPercentageMap(anyMap());
     }
 

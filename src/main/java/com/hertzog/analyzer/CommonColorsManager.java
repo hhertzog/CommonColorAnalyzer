@@ -27,8 +27,8 @@ public class CommonColorsManager {
     }
 
     public void drawColorChartForAllImagesInDirectory(@NonNull String directory) {
-        Map<String, Double> percentageMap =
-                converter.getPercentageMapFromPixelCounts(getAllDirectoryFilesCombinedPixelCountsMap(directory));
+        Map<String, Integer> pixelCountsMap = getAllDirectoryFilesCombinedPixelCountsMap(directory);
+        Map<String, Double> percentageMap = converter.getPercentageMapFromPixelCounts(pixelCountsMap, numColorsToFind);
 
         view.drawCommonImageColorsFromPercentageMap(percentageMap);
     }
