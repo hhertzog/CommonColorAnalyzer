@@ -31,7 +31,7 @@ public class CommonColorsViewTests {
     private CommonColorsView sut;
 
     @BeforeEach
-    public void before() {
+    public void setUp() {
         System.setProperty("java.awt.headless", "false");
     }
 
